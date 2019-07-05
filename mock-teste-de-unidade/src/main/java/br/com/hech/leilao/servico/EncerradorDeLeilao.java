@@ -14,13 +14,23 @@ public class EncerradorDeLeilao {
 		LeilaoDao dao = new LeilaoDao();
 		List<Leilao> todosLeiloesCorrentes = dao.correntes();
 
-		for (Leilao leilao : todosLeiloesCorrentes) {
-			if (comecouSemanaPassada(leilao)) {
+//		for (Leilao leilao : todosLeiloesCorrentes) {
+//			if (comecouSemanaPassada(leilao)) {
+//				leilao.encerra();
+//				total++;
+//				dao.atualiza(leilao);
+//			}
+//		}
+		
+		//lambda
+		todosLeiloesCorrentes.forEach(leilao -> {
+			if(comecouSemanaPassada(leilao)) {
 				leilao.encerra();
 				total++;
 				dao.atualiza(leilao);
 			}
-		}
+		});
+		
 	}
 
 	private boolean comecouSemanaPassada(Leilao leilao) {
