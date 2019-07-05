@@ -4,14 +4,14 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.hech.leilao.dominio.Leilao;
-import br.com.hech.leilao.infra.dao.LeilaoDao;
+import br.com.hech.leilao.infra.dao.LeilaoDaoFalso;
 
 public class EncerradorDeLeilao {
 
 	private int total = 0;
 
 	public void encerra() {
-		LeilaoDao dao = new LeilaoDao();
+		LeilaoDaoFalso dao = new LeilaoDaoFalso();
 		List<Leilao> todosLeiloesCorrentes = dao.correntes();
 
 //		for (Leilao leilao : todosLeiloesCorrentes) {
