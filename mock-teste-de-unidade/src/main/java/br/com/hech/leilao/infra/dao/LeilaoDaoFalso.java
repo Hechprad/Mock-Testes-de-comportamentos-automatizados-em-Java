@@ -21,7 +21,7 @@ public class LeilaoDaoFalso {
 //		}
 		
 		// lambda
-		filtrados.forEach(leilao -> {
+		leiloes.forEach(leilao -> {
 			if(leilao.isEncerrado()) filtrados.add(leilao);
 		});
 
@@ -36,9 +36,10 @@ public class LeilaoDaoFalso {
 //		}
 
 		// lambda
-		filtrados.forEach(leilao -> {
-			if(leilao.isEncerrado()) filtrados.add(leilao);
+		leiloes.forEach(leilao -> {
+			if(!leilao.isEncerrado()) filtrados.add(leilao);
 		});
+		
 		return filtrados;
 	}
 	
