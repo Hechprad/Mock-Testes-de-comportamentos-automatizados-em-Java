@@ -16,9 +16,14 @@ public class LeilaoDaoFalso {
 	public List<Leilao> encerrados() {
 		
 		List<Leilao> filtrados = new ArrayList<Leilao>();
-		for(Leilao leilao : leiloes) {
+//		for(Leilao leilao : leiloes) {
+//			if(leilao.isEncerrado()) filtrados.add(leilao);
+//		}
+		
+		// lambda
+		filtrados.forEach(leilao -> {
 			if(leilao.isEncerrado()) filtrados.add(leilao);
-		}
+		});
 
 		return filtrados;
 	}
@@ -26,10 +31,14 @@ public class LeilaoDaoFalso {
 	public List<Leilao> correntes() {
 		
 		List<Leilao> filtrados = new ArrayList<Leilao>();
-		for(Leilao leilao : leiloes) {
-			if(!leilao.isEncerrado()) filtrados.add(leilao);
-		}
+//		for(Leilao leilao : leiloes) {
+//			if(!leilao.isEncerrado()) filtrados.add(leilao);
+//		}
 
+		// lambda
+		filtrados.forEach(leilao -> {
+			if(leilao.isEncerrado()) filtrados.add(leilao);
+		});
 		return filtrados;
 	}
 	

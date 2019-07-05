@@ -21,16 +21,16 @@ public class EncerradorDeLeilao {
 //				dao.atualiza(leilao);
 //			}
 //		}
-		
-		//lambda
+
+		// lambda
 		todosLeiloesCorrentes.forEach(leilao -> {
-			if(comecouSemanaPassada(leilao)) {
+			if (comecouSemanaPassada(leilao)) {
 				leilao.encerra();
 				total++;
 				dao.atualiza(leilao);
 			}
 		});
-		
+
 	}
 
 	private boolean comecouSemanaPassada(Leilao leilao) {
