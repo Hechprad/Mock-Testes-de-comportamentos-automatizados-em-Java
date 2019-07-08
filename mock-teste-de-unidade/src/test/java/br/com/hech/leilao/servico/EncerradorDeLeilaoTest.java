@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +17,6 @@ import org.junit.Test;
 
 import br.com.hech.leilao.builder.CriadorDeLeilao;
 import br.com.hech.leilao.dominio.Leilao;
-import br.com.hech.leilao.infra.dao.LeilaoDao;
 import br.com.hech.leilao.infra.dao.RepositorioDeLeiloes;
 
 public class EncerradorDeLeilaoTest {
@@ -33,7 +34,7 @@ public class EncerradorDeLeilaoTest {
 				.constroi();
 		List<Leilao> leiloesAntigos = Arrays.asList(leilao1, leilao2);
 		
-		LeilaoDao daoFalso = mock(LeilaoDao.class);
+		RepositorioDeLeiloes daoFalso = mock(RepositorioDeLeiloes.class);
 		
 		when(daoFalso.correntes()).thenReturn(leiloesAntigos);
 
@@ -58,7 +59,7 @@ public class EncerradorDeLeilaoTest {
 				.naData(ontem)
 				.constroi();
 		
-		LeilaoDao daoFalso = mock(LeilaoDao.class);
+		RepositorioDeLeiloes daoFalso = mock(RepositorioDeLeiloes.class);
 		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1, leilao2));
 
 		EncerradorDeLeilao encerrador = new EncerradorDeLeilao(daoFalso);
@@ -78,6 +79,26 @@ public class EncerradorDeLeilaoTest {
 		encerrador.encerra();
 		
 		assertEquals(0, encerrador.getTotalEncerrados());
+	}
+	
+	@Test
+	public void deveAtualizarLeiloesEncerrados () {
+		Calendar antiga = Calendar.getInstance();
+		antiga.set(1999, 1, 20);
+		
+		Leilao leilao1 = new CriadorDeLeilao().para("TV de led")
+				.naData(antiga)
+				.constroi();
+		
+		RepositorioDeLeiloes daoFalso = mock(RepositorioDeLeiloes.class);
+		
+		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1));
+
+		EncerradorDeLeilao encerrador = new EncerradorDeLeilao(daoFalso);
+		encerrador.encerra();
+		
+		//verify do mockito garante que um método foi invocado
+		verify(daoFalso, times(1)).atualiza(leilao1);
 	}
 
 }
