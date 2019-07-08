@@ -25,20 +25,21 @@ public class EncerradorDeLeilaoTest {
 	
 	private RepositorioDeLeiloes daoFalso;
 	private EnviadorDeEmail carteiroFalso;
+	private Calendar dataTeste;
 	
 	@Before
 	public void setUp() {
 		this.daoFalso = mock(RepositorioDeLeiloes.class);
 		this.carteiroFalso = mock(EnviadorDeEmail.class);
+		this.dataTeste = Calendar.getInstance();
 	}
 
 	@Test
 	public void deveEncerrarLeiloesQueComecaramUmaSemanaAntes() {
-		Calendar antiga = Calendar.getInstance();
-		antiga.set(1999, 1, 20);
+		dataTeste.set(1999, 1, 20);
 
-		Leilao leilao1 = new CriadorDeLeilao().para("TV de led").naData(antiga).constroi();
-		Leilao leilao2 = new CriadorDeLeilao().para("Geladeira").naData(antiga).constroi();
+		Leilao leilao1 = new CriadorDeLeilao().para("TV de led").naData(dataTeste).constroi();
+		Leilao leilao2 = new CriadorDeLeilao().para("Geladeira").naData(dataTeste).constroi();
 		List<Leilao> leiloesAntigos = Arrays.asList(leilao1, leilao2);
 
 		when(daoFalso.correntes()).thenReturn(leiloesAntigos);
@@ -53,12 +54,10 @@ public class EncerradorDeLeilaoTest {
 
 	@Test
 	public void naoDeveEncerrarLeiloesQueComecaramOntem() {
-		Calendar ontem = Calendar.getInstance();
+		dataTeste.add(Calendar.DAY_OF_MONTH, -1);
 
-		ontem.add(Calendar.DAY_OF_MONTH, -1);
-
-		Leilao leilao1 = new CriadorDeLeilao().para("TV de led").naData(ontem).constroi();
-		Leilao leilao2 = new CriadorDeLeilao().para("Geladeira").naData(ontem).constroi();
+		Leilao leilao1 = new CriadorDeLeilao().para("TV de led").naData(dataTeste).constroi();
+		Leilao leilao2 = new CriadorDeLeilao().para("Geladeira").naData(dataTeste).constroi();
 
 		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1, leilao2));
 
@@ -89,10 +88,9 @@ public class EncerradorDeLeilaoTest {
 
 	@Test
 	public void deveAtualizarLeiloesEncerrados() {
-		Calendar antiga = Calendar.getInstance();
-		antiga.set(1999, 1, 20);
+		dataTeste.set(1999, 1, 20);
 
-		Leilao leilao1 = new CriadorDeLeilao().para("TV de led").naData(antiga).constroi();
+		Leilao leilao1 = new CriadorDeLeilao().para("TV de led").naData(dataTeste).constroi();
 
 		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1));
 
