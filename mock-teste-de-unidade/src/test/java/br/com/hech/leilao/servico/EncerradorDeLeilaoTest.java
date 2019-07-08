@@ -8,6 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.inOrder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import br.com.hech.leilao.builder.CriadorDeLeilao;
 import br.com.hech.leilao.dominio.Leilao;
@@ -23,15 +25,17 @@ import br.com.hech.leilao.infra.dao.RepositorioDeLeiloes;
 
 public class EncerradorDeLeilaoTest {
 	
+	private Calendar dataTeste;
 	private RepositorioDeLeiloes daoFalso;
 	private EnviadorDeEmail carteiroFalso;
-	private Calendar dataTeste;
+	private EncerradorDeLeilao encerrador;
 	
 	@Before
 	public void setUp() {
+		this.dataTeste = Calendar.getInstance();
 		this.daoFalso = mock(RepositorioDeLeiloes.class);
 		this.carteiroFalso = mock(EnviadorDeEmail.class);
-		this.dataTeste = Calendar.getInstance();
+		this.encerrador = new EncerradorDeLeilao(daoFalso, carteiroFalso);
 	}
 
 	@Test
@@ -44,7 +48,6 @@ public class EncerradorDeLeilaoTest {
 
 		when(daoFalso.correntes()).thenReturn(leiloesAntigos);
 
-		EncerradorDeLeilao encerrador = new EncerradorDeLeilao(daoFalso, carteiroFalso);
 		encerrador.encerra();
 
 		assertEquals(2, encerrador.getTotalEncerrados());
@@ -61,7 +64,6 @@ public class EncerradorDeLeilaoTest {
 
 		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1, leilao2));
 
-		EncerradorDeLeilao encerrador = new EncerradorDeLeilao(daoFalso, carteiroFalso);
 		encerrador.encerra();
 
 		assertEquals(0, encerrador.getTotalEncerrados());
@@ -94,11 +96,24 @@ public class EncerradorDeLeilaoTest {
 
 		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1));
 
-		EncerradorDeLeilao encerrador = new EncerradorDeLeilao(daoFalso, carteiroFalso);
 		encerrador.encerra();
 
 		// verify do mockito garante que um método foi invocado
 		verify(daoFalso, times(1)).atualiza(leilao1);
 	}
 
+	@Test
+    public void deveEnviarEmailAposPersistirLeilaoEncerrado() {
+		dataTeste.set(1999, 1, 20);
+	
+		Leilao leilao1 = new CriadorDeLeilao().para("Game boy roxo").naData(dataTeste).constroi();
+		
+		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1));
+
+		encerrador.encerra();
+		
+		InOrder inOrder = inOrder(daoFalso, carteiroFalso);
+		inOrder.verify(daoFalso, times(1)).atualiza(leilao1);
+		inOrder.verify(carteiroFalso, times(1)).envia(leilao1);
+	}
 }
