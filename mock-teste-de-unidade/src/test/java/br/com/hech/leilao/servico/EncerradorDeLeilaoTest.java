@@ -9,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,5 +117,22 @@ public class EncerradorDeLeilaoTest {
 		InOrder inOrder = inOrder(daoFalso, carteiroFalso);
 		inOrder.verify(daoFalso, times(1)).atualiza(leilao1);
 		inOrder.verify(carteiroFalso, times(1)).envia(leilao1);
+	}
+	
+	@Test
+	public void deveContinuarAExecucaoMesmoQuandoDaoFalha() {
+		dataTeste.set(1999, 1, 20);
+		
+		Leilao leilao1 = new CriadorDeLeilao().para("PC desktop").naData(dataTeste).constroi();
+		Leilao leilao2 = new CriadorDeLeilao().para("Teclado gamer").naData(dataTeste).constroi();
+		
+		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1, leilao2));
+		// simulando problema no BD com o primeiro leilão no método atualiza()
+		doThrow(new RuntimeException()).when(daoFalso).atualiza(leilao1);
+		
+		encerrador.encerra();
+		
+		verify(daoFalso).atualiza(leilao2);
+		verify(carteiroFalso).envia(leilao2);
 	}
 }
