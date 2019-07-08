@@ -44,7 +44,7 @@ public class EncerradorDeLeilao {
 					carteiro.envia(leilao);
 				}
 			} catch (Exception e) {
-				// joga exceção e continua...
+				// pega a exceção e o loop continua...
 			}
 		});
 
