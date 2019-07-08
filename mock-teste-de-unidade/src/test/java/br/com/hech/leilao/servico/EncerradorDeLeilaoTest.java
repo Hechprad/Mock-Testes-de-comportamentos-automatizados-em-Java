@@ -16,6 +16,7 @@ import org.junit.Test;
 import br.com.hech.leilao.builder.CriadorDeLeilao;
 import br.com.hech.leilao.dominio.Leilao;
 import br.com.hech.leilao.infra.dao.LeilaoDao;
+import br.com.hech.leilao.infra.dao.RepositorioDeLeiloes;
 
 public class EncerradorDeLeilaoTest {
 
@@ -70,7 +71,7 @@ public class EncerradorDeLeilaoTest {
 	
 	@Test
 	public void naoDeveEncerrarLeilaoCasoNaoHajaNenhum() {
-		LeilaoDao daoFalso = mock(LeilaoDao.class);
+		RepositorioDeLeiloes daoFalso = mock(RepositorioDeLeiloes.class);
 		when(daoFalso.correntes()).thenReturn(new ArrayList<Leilao>());
 		
 		EncerradorDeLeilao encerrador = new EncerradorDeLeilao(daoFalso);

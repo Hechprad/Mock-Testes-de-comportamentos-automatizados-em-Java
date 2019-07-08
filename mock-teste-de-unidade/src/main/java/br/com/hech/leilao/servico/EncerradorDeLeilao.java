@@ -4,16 +4,22 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.hech.leilao.dominio.Leilao;
-import br.com.hech.leilao.infra.dao.LeilaoDao;
+import br.com.hech.leilao.infra.dao.RepositorioDeLeiloes;
 
 public class EncerradorDeLeilao {
 
 	private int total = 0;
-	private final LeilaoDao dao;
+//	private final LeilaoDao dao;
+	private final RepositorioDeLeiloes dao;
 
-	public EncerradorDeLeilao(LeilaoDao dao) {
-		this.dao = dao;
-	}
+    public EncerradorDeLeilao(RepositorioDeLeiloes dao) {
+        this.dao = dao;
+    }
+
+//	public EncerradorDeLeilao(LeilaoDao dao) {
+//		this.dao = dao;
+//	}
+
 	
 	public void encerra() {
 		List<Leilao> todosLeiloesCorrentes = dao.correntes();
