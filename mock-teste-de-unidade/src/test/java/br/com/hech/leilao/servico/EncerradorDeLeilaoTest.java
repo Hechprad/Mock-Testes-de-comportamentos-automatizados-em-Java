@@ -152,4 +152,21 @@ public class EncerradorDeLeilaoTest {
 		verify(daoFalso, times(1)).atualiza(leilao2);
 		verify(carteiroFalso, times(1)).envia(leilao2);
 	}
+	
+	@Test
+	public void deveDesistiSeDaoFalhaSempre() {
+		dataTeste.set(1999, 1, 20);
+		
+		Leilao leilao1 = new CriadorDeLeilao().para("Monitor").naData(dataTeste).constroi();
+		Leilao leilao2 = new CriadorDeLeilao().para("Mesa").naData(dataTeste).constroi();
+		
+		when(daoFalso.correntes()).thenReturn(Arrays.asList(leilao1, leilao2));
+		doThrow(new RuntimeException()).when(daoFalso).atualiza(leilao1);
+		doThrow(new RuntimeException()).when(daoFalso).atualiza(leilao2);
+		
+		encerrador.encerra();
+
+		verify(carteiroFalso, never()).envia(leilao1);
+		verify(carteiroFalso, never()).envia(leilao2);
+	}
 }
