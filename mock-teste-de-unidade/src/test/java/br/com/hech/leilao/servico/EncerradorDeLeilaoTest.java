@@ -41,4 +41,9 @@ public class EncerradorDeLeilaoTest {
 		assertTrue(leilao1.isEncerrado());
 		assertTrue(leilao2.isEncerrado());
 	}
+	
+	@Test
+	public void naoDeveEncerrarLeiloesQueComecaramOntem() {
+		
+	}
 }
