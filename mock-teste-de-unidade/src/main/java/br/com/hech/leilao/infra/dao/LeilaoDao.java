@@ -16,7 +16,7 @@ import br.com.hech.leilao.dominio.Lance;
 import br.com.hech.leilao.dominio.Leilao;
 import br.com.hech.leilao.dominio.Usuario;
 
-public class LeilaoDao {
+public class LeilaoDao implements RepositorioDeLeiloes {
 
 	private Connection conexao;
 

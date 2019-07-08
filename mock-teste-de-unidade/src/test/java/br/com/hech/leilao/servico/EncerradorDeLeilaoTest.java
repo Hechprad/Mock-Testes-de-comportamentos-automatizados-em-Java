@@ -78,4 +78,5 @@ public class EncerradorDeLeilaoTest {
 		
 		assertEquals(0, encerrador.getTotalEncerrados());
 	}
+
 }
