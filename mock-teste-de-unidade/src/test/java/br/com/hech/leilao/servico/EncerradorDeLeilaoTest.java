@@ -3,12 +3,12 @@ package br.com.hech.leilao.servico;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.inOrder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,19 +22,20 @@ import org.mockito.InOrder;
 import br.com.hech.leilao.builder.CriadorDeLeilao;
 import br.com.hech.leilao.dominio.Leilao;
 import br.com.hech.leilao.infra.dao.RepositorioDeLeiloes;
+import br.com.hech.leilao.infra.email.Carteiro;
 
 public class EncerradorDeLeilaoTest {
 	
 	private Calendar dataTeste;
 	private RepositorioDeLeiloes daoFalso;
-	private EnviadorDeEmail carteiroFalso;
+	private Carteiro carteiroFalso;
 	private EncerradorDeLeilao encerrador;
 	
 	@Before
 	public void setUp() {
 		this.dataTeste = Calendar.getInstance();
 		this.daoFalso = mock(RepositorioDeLeiloes.class);
-		this.carteiroFalso = mock(EnviadorDeEmail.class);
+		this.carteiroFalso = mock(Carteiro.class);
 		this.encerrador = new EncerradorDeLeilao(daoFalso, carteiroFalso);
 	}
 
