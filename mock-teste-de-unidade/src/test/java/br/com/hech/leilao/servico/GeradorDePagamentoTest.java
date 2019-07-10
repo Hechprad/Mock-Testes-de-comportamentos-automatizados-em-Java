@@ -17,6 +17,7 @@ import br.com.hech.leilao.dominio.Pagamento;
 import br.com.hech.leilao.dominio.Usuario;
 import br.com.hech.leilao.infra.dao.RepositorioDeLeiloes;
 import br.com.hech.leilao.infra.dao.RepositorioDePagamentos;
+import br.com.hech.leilao.infra.relogio.Relogio;
 
 public class GeradorDePagamentoTest {
 
@@ -48,6 +49,7 @@ public class GeradorDePagamentoTest {
 	public void deveEmpurrarParaOProximoDiaUtil() {
 		RepositorioDeLeiloes leiloes = mock(RepositorioDeLeiloes.class);
 		RepositorioDePagamentos pagamentos = mock(RepositorioDePagamentos.class);
+		Relogio relogio = mock(Relogio.class);
 		
 		Leilao leilao = new CriadorDeLeilao()
 				.para("Teclado mecânico")
@@ -57,7 +59,12 @@ public class GeradorDePagamentoTest {
 		
 		when(leiloes.encerrados()).thenReturn(Arrays.asList(leilao));
 		
-		GeradorDePagamento gerador = new GeradorDePagamento(leiloes, pagamentos, new Avaliador());
+		Calendar sabado = Calendar.getInstance();
+		sabado.set(2012, Calendar.APRIL, 7);
+		
+		when(relogio.hoje()).thenReturn(sabado);
+		
+		GeradorDePagamento gerador = new GeradorDePagamento(leiloes, pagamentos, new Avaliador(), relogio);
 		gerador.gera();
 		
 		ArgumentCaptor<Pagamento> argumento = ArgumentCaptor.forClass(Pagamento.class);
@@ -66,5 +73,6 @@ public class GeradorDePagamentoTest {
 		Pagamento pagamentoGerado = argumento.getValue();
 		
 		assertEquals(Calendar.MONDAY, pagamentoGerado.getData().get(Calendar.DAY_OF_WEEK));
+		assertEquals(9, pagamentoGerado.getData().get(Calendar.DAY_OF_MONTH));
 	}
 }
